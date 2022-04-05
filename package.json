@@ -1,0 +1,57 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "notion-ctrl",
+  "title": "notion-ctrl",
+  "description": "特定のNotionデータベースへ素早くデータを保存する",
+  "icon": "command-icon.png",
+  "author": "nbr41to",
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "index",
+      "title": "Notion Ctrl",
+      "description": "特定のNotionデータベースへ素早くデータを保存する",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "NOTION_INTEGRATION_TOKEN",
+      "type": "textfield",
+      "required": true,
+      "title": "Notion Integration Token",
+      "description": "Integration Token of Notion API",
+      "placeholder": "secret_xxxxxxxxxx"
+    },
+    {
+      "name": "NOTION_DATABASE_ID",
+      "type": "textfield",
+      "required": true,
+      "title": "Notion Database ID",
+      "description": "Database ID in Notion",
+      "placeholder": "3d29cb748b4b80cec176e5d4d2ef5746"
+    }
+  ],
+  "dependencies": {
+    "@notionhq/client": "^1.0.4",
+    "@raycast/api": "^1.31.0",
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "~16.10.0",
+    "@types/react": "^17.0.28",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "^2.5.1",
+    "react-devtools": "^4.19.2",
+    "typescript": "^4.4.3"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint"
+  }
+}
