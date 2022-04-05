@@ -34,8 +34,7 @@
   ],
   "dependencies": {
     "@notionhq/client": "^1.0.4",
-    "@raycast/api": "^1.31.0",
-    "dotenv": "^16.0.0"
+    "@raycast/api": "^1.31.0"
   },
   "devDependencies": {
     "@types/node": "~16.10.0",
