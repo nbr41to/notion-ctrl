@@ -1,6 +1,7 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "notion-ctrl",
+  "version": "0.0.1",
   "title": "notion-ctrl",
   "description": "特定のNotionデータベースへ素早くデータを保存する",
   "icon": "command-icon.png",
