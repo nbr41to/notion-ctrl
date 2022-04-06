@@ -48,10 +48,9 @@ sample: https://www.notion.so/xxxxx/da169b5851f34e48a97f263deee9ef85?v=d3cd4f2bc
 
 ### Raycast から Database に保存する
 
-title のみ必須です。children に入力されたものは改行区切りで、ページ内のテキストブロックとして保存されます。
+title のみ必須です。content に入力されたものは改行区切りで、ページ内のテキストブロックとして保存されます。
 
 ## 今後のアップデート予定
 
-- 入力時に単一選択で category を選択できるようにする
 - 入力時に複数選択で tags を選択できるようにする
-- 保存する Database を複数から選択できるようにする
+- 人力時に日付を入力できるようにする

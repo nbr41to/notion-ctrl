@@ -1,7 +1,7 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "notion-ctrl",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "title": "notion-ctrl",
   "description": "特定のNotionデータベースへ素早くデータを保存する",
   "icon": "command-icon.png",
@@ -10,7 +10,13 @@
   "commands": [
     {
       "name": "index",
-      "title": "Notion Ctrl",
+      "title": "Post Content",
+      "description": "特定のNotionデータベースへ素早くデータを保存する",
+      "mode": "view"
+    },
+    {
+      "name": "databases",
+      "title": "Database Settings",
       "description": "特定のNotionデータベースへ素早くデータを保存する",
       "mode": "view"
     }
@@ -23,19 +29,12 @@
       "title": "Notion Integration Token",
       "description": "Integration Token of Notion API",
       "placeholder": "secret_xxxxxxxxxx"
-    },
-    {
-      "name": "NOTION_DATABASE_ID",
-      "type": "textfield",
-      "required": true,
-      "title": "Notion Database ID",
-      "description": "Database ID in Notion",
-      "placeholder": "3d29cb748b4b80cec176e5d4d2ef5746"
     }
   ],
   "dependencies": {
     "@notionhq/client": "^1.0.4",
-    "@raycast/api": "^1.31.0"
+    "@raycast/api": "^1.31.0",
+    "jotai": "^1.6.2"
   },
   "devDependencies": {
     "@types/node": "~16.10.0",
