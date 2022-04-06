@@ -11,7 +11,7 @@ Notion のデータベースに素早くメモを保存できるようにする
 
 ![integrations](./assets/integrations.png)
 
-設定内容は画像のようにしてください。（デフォルトのままで構いません）
+設定内容は画像のようにしてください。（デフォルトのままでも構いません）
 
 ![create integration](./assets/create_integration.png)
 
