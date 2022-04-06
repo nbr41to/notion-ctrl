@@ -9,11 +9,11 @@ Notion のデータベースに素早くメモを保存できるようにする
 この拡張機能は [Notion API](https://developers.notion.com/) を使用しています。これを
 使用するために Notion のアカウントで[My Integrations](https://www.notion.so/my-integrations)にアクセスし、Integration を作成します。
 
-[!integrations](./assets/integrations.png)
+![integrations](./assets/integrations.png)
 
 設定内容は画像のようにしてください。（デフォルトのままで構いません）
 
-[!create integration](./assets/create_integration.png)
+![create integration](./assets/create_integration.png)
 
 作成し終えたら、Secrets/Internal Integration Token を取得します。
 
@@ -42,7 +42,7 @@ sample: https://www.notion.so/xxxxx/da169b5851f34e48a97f263deee9ef85?v=d3cd4f2bc
 
 上記で取得した Toke と ID の入力を初期画面で求められるので入力します。
 
-[!preferences](./assets/preferences.png)
+![preferences](./assets/preferences.png)
 
 間違って指定した or 変更する場合は、Raycast の Preferences（設定）から Extensions の Notion-ctrl を選択すると再設定できます。
 
