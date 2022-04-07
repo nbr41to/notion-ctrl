@@ -1,57 +1,105 @@
-import { ActionPanel, Action, useNavigation, List, LocalStorage, confirmAlert, Icon } from "@raycast/api";
+import {
+  ActionPanel,
+  Action,
+  useNavigation,
+  List,
+  LocalStorage,
+  confirmAlert,
+  Icon,
+  Alert,
+  showToast,
+  Toast,
+} from "@raycast/api";
+import { useState } from "react";
 import { useDatabaseList } from "./hooks/useDatabaseList";
 import { useStorage } from "./hooks/useStorage";
 import { getDatabaseInfo } from "./utils/notion";
 import { upsertDatabase } from "./utils/storage";
+import { DatabaseDetail } from "./views/DatabaseDetail";
 import { DatabaseIdForm } from "./views/DatabaseIdForm";
 
 export default function Command() {
   const { push } = useNavigation();
-  const { removeItem, setItems, items } = useStorage();
+  const { removeItem } = useStorage();
   const { databaseList, setDatabaseList } = useDatabaseList();
 
-  const handleUpsert = async (databaseId: string) => {
-    await LocalStorage.clear();
-    try {
-      const response = await getDatabaseInfo(databaseId);
-      if (!response) return;
-      await upsertDatabase(response);
-    } catch (err) {
-      console.error(err);
+  const [isLoading, setIsLoading] = useState(false);
+
+  /* 更新 */
+  const handleUpdate = async (databaseId: string) => {
+    if (
+      await confirmAlert({
+        title: "Update the database?",
+        message:
+          "データベースを更新しますか？\n\nデータベースを更新することで、データベースのタイトルや選択肢の情報を更新することができます。",
+        icon: Icon.TwoArrowsClockwise,
+        primaryAction: {
+          title: "更新",
+          style: Alert.ActionStyle.Default,
+        },
+        dismissAction: {
+          title: "キャンセル",
+          style: Alert.ActionStyle.Cancel,
+        },
+      })
+    ) {
+      try {
+        setIsLoading(true);
+        const response = await getDatabaseInfo(databaseId);
+        if (!response) return;
+        const result = await upsertDatabase(response);
+        setDatabaseList(
+          databaseList.map((database) => {
+            if (database.id === databaseId) return result;
+            return database;
+          })
+        );
+        showToast({ title: "Success updated!!", style: Toast.Style.Success });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
+  /* 削除 */
   const handleDelete = async (databaseId: string) => {
     if (
       await confirmAlert({
-        title: "Are you sure?",
+        title: "Delete the database?",
         message: "データベースを削除しますか？",
-        icon: Icon.ExclamationMark,
+        icon: Icon.Trash,
+        primaryAction: {
+          title: "削除",
+          style: Alert.ActionStyle.Destructive,
+        },
+        dismissAction: {
+          title: "キャンセル",
+          style: Alert.ActionStyle.Cancel,
+        },
       })
     ) {
-      await removeItem(databaseId);
-      // delete items[databaseId];
-      // setItems(items);
-      setDatabaseList(databaseList.filter((database) => database.id !== databaseId));
+      try {
+        setIsLoading(true);
+        await removeItem(databaseId);
+        setDatabaseList(databaseList.filter((database) => database.id !== databaseId));
+        showToast({ title: "Success deleted!!", style: Toast.Style.Success });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
   return (
-    <List>
+    <List navigationTitle="Setting Database" isLoading={isLoading}>
       <List.Item
-        title="+ Add new database"
+        title="+ Add new a database"
         actions={
           <ActionPanel>
-            <Action title="Add new database" onAction={() => push(<DatabaseIdForm />)} />
-          </ActionPanel>
-        }
-      />
-      <List.Item
-        title="test action"
-        subtitle=""
-        actions={
-          <ActionPanel>
-            <Action title="" onAction={() => handleUpsert("aaaa")} />
+            <Action title="Create Database" onAction={() => push(<DatabaseIdForm />)} />
           </ActionPanel>
         }
       />
@@ -59,15 +107,21 @@ export default function Command() {
         <List.Item
           key={database.id}
           title={database.title}
-          subtitle="subtitle"
+          subtitle="view / update / delete ...(⌘ + K)"
+          accessories={[{ text: database.updatedAt, icon: database.updatedAt && Icon.Clock }]}
           actions={
             <ActionPanel>
               <ActionPanel.Section title="Action Menu">
-                <Action title="info" onAction={() => console.log("info!!")} />
-                <Action title="upsert" onAction={() => handleUpsert(database.id)} />
                 <Action
-                  title="delete2"
-                  shortcut={{ modifiers: ["cmd"], key: "delete" }}
+                  title="View Detail"
+                  icon={Icon.TextDocument}
+                  onAction={() => push(<DatabaseDetail databaseId={database.id} />)}
+                />
+                <Action title="Update" icon={Icon.TwoArrowsClockwise} onAction={() => handleUpdate(database.id)} />
+                <Action
+                  title="Delete"
+                  icon={Icon.Trash}
+                  shortcut={{ modifiers: ["cmd"], key: "backspace" }}
                   onAction={() => handleDelete(database.id)}
                 />
               </ActionPanel.Section>

@@ -1,4 +1,4 @@
-import { Form, ActionPanel, Action, showToast, Toast, useNavigation, closeMainWindow, List } from "@raycast/api";
+import { Form, ActionPanel, Action, showToast, Toast, useNavigation, closeMainWindow } from "@raycast/api";
 import { useState } from "react";
 import { postContents } from "./utils/notion";
 import { Database, PostContents } from "./types";
@@ -20,8 +20,10 @@ export default function Command() {
 
   /* 送信 */
   const handleSubmit = async (values: PostContents) => {
+    /* Validation */
     if (!values.title) return showToast({ title: "Title is required", style: Toast.Style.Failure });
     if (!values.databaseId) return showToast({ title: "Database is required", style: Toast.Style.Failure });
+
     setIsLoading(true);
     try {
       await postContents(values);
@@ -51,7 +53,6 @@ export default function Command() {
       }
       isLoading={isLoading}
     >
-      {console.log("selectedDatabase", selectedDatabase)}
       <Form.TextField id="title" title="title" placeholder="short text" />
       <Form.TextArea id="content" title="page contents" placeholder="about content" />
 

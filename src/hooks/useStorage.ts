@@ -1,5 +1,5 @@
 import { LocalStorage } from "@raycast/api";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 export const useStorage = () => {
   const [items, setItems] = useState<{ [key: string]: string }>({});
@@ -11,12 +11,6 @@ export const useStorage = () => {
     })();
   }, []);
 
-  /* JSONで保存されたDatabaseListを変換 */
-  const databaseList = useMemo(() => {
-    const databaseIds = Object.keys(items);
-    return databaseIds.map((id) => JSON.parse(items[id]));
-  }, [items]);
-
   const setItem = async (key: string, value: string) => {
     await LocalStorage.setItem(key, value);
   };
@@ -25,5 +19,5 @@ export const useStorage = () => {
     await LocalStorage.removeItem(key);
   };
 
-  return { items, setItems, databaseList, setItem, removeItem };
+  return { items, setItems, setItem, removeItem };
 };

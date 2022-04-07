@@ -16,8 +16,8 @@ export const DatabaseIdForm = () => {
       const databaseId = values.databaseId;
       const response = await getDatabaseInfo(databaseId);
       if (!response) throw new Error("Not found Database. Please confirm the database ID.");
-      await upsertDatabase(response);
-      setDatabaseList([...databaseList, response]);
+      const result = await upsertDatabase(response);
+      setDatabaseList([...databaseList, result]);
       pop();
     } catch (err) {
       /* Errorの勉強する */

@@ -54,3 +54,5 @@ title のみ必須です。content に入力されたものは改行区切りで
 
 - 入力時に複数選択で tags を選択できるようにする
 - 人力時に日付を入力できるようにする
+- database の icon を表示
+- info に Database の情報を表示

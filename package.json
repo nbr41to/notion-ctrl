@@ -16,7 +16,7 @@
     },
     {
       "name": "databases",
-      "title": "Database Settings",
+      "title": "Setting Database",
       "description": "特定のNotionデータベースへ素早くデータを保存する",
       "mode": "view"
     }

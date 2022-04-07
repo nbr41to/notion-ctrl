@@ -4,16 +4,14 @@ import { PostContents, Preferences } from "../types";
 
 const { NOTION_INTEGRATION_TOKEN } = getPreferenceValues<Preferences>();
 
-// Initializing a client
+/* Initializing a client */
 const notion = new Client({
   auth: NOTION_INTEGRATION_TOKEN,
 });
 
-export const getUser = async () => {
-  const user = await notion.users.list({});
-  console.log(user);
-};
-
+/**
+ * Database へ保存
+ */
 export const postContents = async (values: PostContents) => {
   return await notion.pages.create({
     parent: {
@@ -59,25 +57,15 @@ export const postContents = async (values: PostContents) => {
     }),
   });
 };
-/**
- *
- * @param databaseIds
- */
-export const getDatabaseList = async (databaseIds: string[]) => {
-  return await Promise.all(
-    databaseIds.map(async (database_id) => {
-      return await notion.databases.retrieve({ database_id });
-    })
-  );
-};
 
 /**
  * Database の情報を取得
  */
 export const getDatabaseInfo = async (database_id: string) => {
   const response = await notion.databases.retrieve({ database_id });
-  if ("title" in response) {
+  if ("icon" in response && "title" in response) {
     const title = response.title.length > 0 ? response.title[0].plain_text : "Untitled";
+    const icon = response.icon && "emoji" in response.icon ? response.icon.emoji : "📁";
     const selectOptions =
       "category" in response.properties &&
       response.properties?.category.type === "select" &&
@@ -87,7 +75,7 @@ export const getDatabaseInfo = async (database_id: string) => {
 
     return {
       id: response.id,
-      title,
+      title: `${icon} ${title}`,
       categories: categoryNames || [],
       done: isCheckbox,
     };
