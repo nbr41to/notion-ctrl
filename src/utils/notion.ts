@@ -100,14 +100,14 @@ export const getDatabaseInfo = async (database_id: string): Promise<Database> =>
 
       const includeDate = "date" in response.properties && response.properties?.date.type === "date";
 
-      const includeCheckbox = "done" in response.properties && response.properties?.done.type === "checkbox";
+      const includeCheckbox = "check" in response.properties && response.properties?.check.type === "checkbox";
 
       return {
         id: response.id,
         title: `${icon} ${title}`,
         categories: categoryNames || null,
         tags: tagNames || null,
-        done: includeCheckbox,
+        check: !!includeCheckbox,
         date: !!includeDate,
       };
     } else {

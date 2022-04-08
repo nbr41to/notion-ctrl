@@ -11,7 +11,7 @@ const initialDatabase: Database = {
   title: "",
   categories: null,
   tags: null,
-  done: false,
+  check: false,
   date: false,
 };
 
@@ -19,7 +19,6 @@ export default function Command() {
   const { pop } = useNavigation();
   const { setItem, previousSelectedDatabaseId } = useStorage();
   const { databaseList } = useDatabaseList();
-  console.log(databaseList);
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDatabaseId, setSelectedDatabaseId] = useState(previousSelectedDatabaseId);
@@ -76,11 +75,13 @@ export default function Command() {
       }
       isLoading={isLoading}
     >
+      <Form.Description title={selectedDatabase.title} text={`is selected (switch by shift + ↑ or ↓)`} />
+      <Form.Separator />
       <Form.TextField id="title" title="title" placeholder="short text" />
       <Form.TextArea id="content" title="page contents" placeholder="about content" />
 
       {selectedDatabase.date && <Form.DatePicker id="date" title="date" />}
-      {/* {selectedDatabase.done && <Form.Checkbox id="done" title="Check" label="Checkbox Label" storeValue />} */}
+      {selectedDatabase.check && <Form.Checkbox id="check" title="Check" label="Checkbox Label" storeValue />}
 
       {selectedDatabase.categories && (
         <Form.Dropdown id="category" title="category" defaultValue="">

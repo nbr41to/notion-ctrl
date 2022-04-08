@@ -14,7 +14,7 @@ export type Database = {
   title: string;
   categories: string[] | null;
   tags: string[] | null;
-  done: boolean;
+  check: boolean;
   date: boolean;
   updatedAt?: string;
 };
