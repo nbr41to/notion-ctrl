@@ -11,12 +11,14 @@
     {
       "name": "index",
       "title": "Post Content",
+      "subtitle": "データベースにメモする",
       "description": "特定のNotionデータベースへ素早くデータを保存する",
       "mode": "view"
     },
     {
       "name": "databases",
       "title": "Setting Database",
+      "subtitle": "データベース管理",
       "description": "特定のNotionデータベースへ素早くデータを保存する",
       "mode": "view"
     }

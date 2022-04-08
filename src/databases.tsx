@@ -99,7 +99,7 @@ export default function Command() {
         title="+ Add new a database"
         actions={
           <ActionPanel>
-            <Action title="Create Database" onAction={() => push(<DatabaseIdForm />)} />
+            <Action.Push title="Create Database" target={<DatabaseIdForm />} />
           </ActionPanel>
         }
       />
@@ -112,10 +112,10 @@ export default function Command() {
           actions={
             <ActionPanel>
               <ActionPanel.Section title="Action Menu">
-                <Action
+                <Action.Push
                   title="View Detail"
                   icon={Icon.TextDocument}
-                  onAction={() => push(<DatabaseDetail databaseId={database.id} />)}
+                  target={<DatabaseDetail databaseId={database.id} />}
                 />
                 <Action title="Update" icon={Icon.TwoArrowsClockwise} onAction={() => handleUpdate(database.id)} />
                 <Action
@@ -124,6 +124,7 @@ export default function Command() {
                   shortcut={{ modifiers: ["cmd"], key: "backspace" }}
                   onAction={() => handleDelete(database.id)}
                 />
+                {/* TODO: Notionで開くコマンド入れたい */}
               </ActionPanel.Section>
             </ActionPanel>
           }

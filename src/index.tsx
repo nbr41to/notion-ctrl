@@ -1,22 +1,34 @@
-import { Form, ActionPanel, Action, showToast, Toast, useNavigation, closeMainWindow } from "@raycast/api";
-import { useState } from "react";
+import { Form, ActionPanel, Action, showToast, Toast, useNavigation, closeMainWindow, showHUD } from "@raycast/api";
+import { useMemo, useState } from "react";
 import { postContents } from "./utils/notion";
 import { Database, PostContents } from "./types";
 import { useDatabaseList } from "./hooks/useDatabaseList";
+import { DatabaseIdForm } from "./views/DatabaseIdForm";
+import { useStorage } from "./hooks/useStorage";
 
 const initialDatabase: Database = {
   id: "",
   title: "",
-  categories: [],
+  categories: null,
+  tags: null,
   done: false,
+  date: false,
 };
 
 export default function Command() {
   const { pop } = useNavigation();
+  const { setItem, previousSelectedDatabaseId } = useStorage();
   const { databaseList } = useDatabaseList();
+  console.log(databaseList);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedDatabase, setSelectedDatabase] = useState<Database>(initialDatabase);
+  const [selectedDatabaseId, setSelectedDatabaseId] = useState(previousSelectedDatabaseId);
+
+  const databaseIds = useMemo(() => databaseList.map((database) => database.id), [databaseList]);
+  const selectedDatabase = useMemo(
+    () => databaseList.find((database) => database.id === selectedDatabaseId) || initialDatabase,
+    [databaseList, selectedDatabaseId]
+  );
 
   /* 送信 */
   const handleSubmit = async (values: PostContents) => {
@@ -27,21 +39,21 @@ export default function Command() {
     setIsLoading(true);
     try {
       await postContents(values);
-      await showToast({ title: "Success!!" });
+      await setItem("previousSelectedDatabaseId", values.databaseId);
+      await showHUD("Success!!");
       pop();
       await closeMainWindow();
     } catch (err) {
-      showToast({ title: "Error", message: err as string, style: Toast.Style.Failure });
-      console.error(err);
+      showToast({ title: "Field", message: "送信に失敗しました", style: Toast.Style.Failure });
+      console.error("[Post Error]: ", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSelectDatabase = (id: string) => {
-    const selectDatabase = databaseList.find((database) => database.id === id);
-    if (!selectDatabase) return;
-    setSelectedDatabase(selectDatabase);
+  const handleSelectDatabaseId = (cursor: number) => {
+    const currentIndex = databaseIds.indexOf(selectedDatabaseId);
+    setSelectedDatabaseId(databaseIds[currentIndex + cursor] || databaseIds[0]);
   };
 
   return (
@@ -49,6 +61,17 @@ export default function Command() {
       actions={
         <ActionPanel>
           <Action.SubmitForm onSubmit={handleSubmit} />
+          <Action.Push title="Add database" target={<DatabaseIdForm />} />
+          <Action
+            title="prev"
+            onAction={() => handleSelectDatabaseId(1)}
+            shortcut={{ modifiers: ["shift"], key: "arrowUp" }}
+          />
+          <Action
+            title="next"
+            onAction={() => handleSelectDatabaseId(1)}
+            shortcut={{ modifiers: ["shift"], key: "arrowDown" }}
+          />
         </ActionPanel>
       }
       isLoading={isLoading}
@@ -56,22 +79,24 @@ export default function Command() {
       <Form.TextField id="title" title="title" placeholder="short text" />
       <Form.TextArea id="content" title="page contents" placeholder="about content" />
 
-      {/* <Form.DatePicker id="datepicker" title="Date picker" /> */}
+      {selectedDatabase.date && <Form.DatePicker id="date" title="date" />}
       {/* {selectedDatabase.done && <Form.Checkbox id="done" title="Check" label="Checkbox Label" storeValue />} */}
 
-      {selectedDatabase.categories.length !== 0 && (
+      {selectedDatabase.categories && (
         <Form.Dropdown id="category" title="category" defaultValue="">
           {selectedDatabase.categories.map((categoryName, index) => (
-            <Form.Dropdown.Item key={`${categoryName} ${index}`} value={categoryName} title={categoryName} />
+            <Form.Dropdown.Item key={`${categoryName}-${index}`} value={categoryName} title={categoryName} />
           ))}
         </Form.Dropdown>
       )}
 
-      {/* <Form.TagPicker id="tokeneditor" title="Tag picker">
-        <Form.TagPicker.Item value="tagpicker-item1" title="TagPicker Item1" />
-        <Form.TagPicker.Item value="tagpicker-item2" title="TagPicker Item2" />
-        <Form.TagPicker.Item value="tagpicker-item3" title="TagPicker Item3" />
-      </Form.TagPicker> */}
+      {selectedDatabase.tags && (
+        <Form.TagPicker id="tags" title="tags">
+          {selectedDatabase.tags.map((tagName, index) => (
+            <Form.TagPicker.Item key={`${tagName}-${index}`} value={tagName} title={tagName} />
+          ))}
+        </Form.TagPicker>
+      )}
 
       <Form.Separator />
 
@@ -79,8 +104,8 @@ export default function Command() {
         id="databaseId"
         title="Database Name"
         storeValue
-        value={selectedDatabase.id}
-        onChange={(value) => handleSelectDatabase(value)}
+        value={selectedDatabaseId}
+        onChange={(value) => setSelectedDatabaseId(value)}
       >
         {databaseList.map((database) => (
           <Form.Dropdown.Item key={database.id} value={database.id} title={database.title} />

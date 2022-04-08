@@ -20,9 +20,8 @@ export const DatabaseIdForm = () => {
       setDatabaseList([...databaseList, result]);
       pop();
     } catch (err) {
-      /* Errorの勉強する */
-      showToast({ title: "Error", message: err as string, style: Toast.Style.Failure });
-      console.error("eee", err);
+      showToast({ title: "Field", message: "Databaseの追加に失敗しました" as string, style: Toast.Style.Failure });
+      console.error("[Database Submit Error]: ", err);
     } finally {
       setIsLoading(false);
     }
