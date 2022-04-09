@@ -13,7 +13,7 @@ export const useStorage = () => {
 
   const previousSelectedDatabaseId = useMemo(
     () => items.previousSelectedDatabaseId,
-    [items.priviousSelectedDatabaseId]
+    [items.previousSelectedDatabaseId]
   );
 
   const setItem = async (key: string, value: string) => {

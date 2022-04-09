@@ -1,15 +1,4 @@
-import {
-  ActionPanel,
-  Action,
-  useNavigation,
-  List,
-  LocalStorage,
-  confirmAlert,
-  Icon,
-  Alert,
-  showToast,
-  Toast,
-} from "@raycast/api";
+import { ActionPanel, Action, List, confirmAlert, Icon, Alert, showToast, Toast } from "@raycast/api";
 import { useState } from "react";
 import { useDatabaseList } from "./hooks/useDatabaseList";
 import { useStorage } from "./hooks/useStorage";
@@ -19,7 +8,6 @@ import { DatabaseDetail } from "./views/DatabaseDetail";
 import { DatabaseIdForm } from "./views/DatabaseIdForm";
 
 export default function Command() {
-  const { push } = useNavigation();
   const { removeItem } = useStorage();
   const { databaseList, setDatabaseList } = useDatabaseList();
 

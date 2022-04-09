@@ -75,8 +75,22 @@ export default function Command() {
       }
       isLoading={isLoading}
     >
-      <Form.Description title={selectedDatabase.title} text={`is selected (switch by shift + ↑ or ↓)`} />
+      {/* <Form.Description title="selected database" text={selectedDatabase.title} />
+      <Form.Description text="switch by `Shift + ↑ or ↓`" /> */}
+      <Form.Dropdown
+        id="databaseId"
+        title="Database Name"
+        storeValue
+        value={selectedDatabaseId}
+        onChange={(value) => setSelectedDatabaseId(value)}
+      >
+        {databaseList.map((database) => (
+          <Form.Dropdown.Item key={database.id} value={database.id} title={database.title} />
+        ))}
+      </Form.Dropdown>
+
       <Form.Separator />
+
       <Form.TextField id="title" title="title" placeholder="short text" />
       <Form.TextArea id="content" title="page contents" placeholder="about content" />
 
@@ -98,20 +112,6 @@ export default function Command() {
           ))}
         </Form.TagPicker>
       )}
-
-      <Form.Separator />
-
-      <Form.Dropdown
-        id="databaseId"
-        title="Database Name"
-        storeValue
-        value={selectedDatabaseId}
-        onChange={(value) => setSelectedDatabaseId(value)}
-      >
-        {databaseList.map((database) => (
-          <Form.Dropdown.Item key={database.id} value={database.id} title={database.title} />
-        ))}
-      </Form.Dropdown>
     </Form>
   );
 }
