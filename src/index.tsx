@@ -24,10 +24,9 @@ export default function Command() {
   const [selectedDatabaseId, setSelectedDatabaseId] = useState(previousSelectedDatabaseId);
 
   const databaseIds = useMemo(() => databaseList.map((database) => database.id), [databaseList]);
-  const selectedDatabase = useMemo(
-    () => databaseList.find((database) => database.id === selectedDatabaseId) || initialDatabase,
-    [databaseList, selectedDatabaseId]
-  );
+  const selectedDatabase = useMemo(() => {
+    return databaseList.find((database) => database.id === selectedDatabaseId) || initialDatabase;
+  }, [databaseList, selectedDatabaseId, previousSelectedDatabaseId]);
 
   /* 送信 */
   const handleSubmit = async (values: PostContents) => {
@@ -52,7 +51,11 @@ export default function Command() {
 
   const handleSelectDatabaseId = (cursor: number) => {
     const currentIndex = databaseIds.indexOf(selectedDatabaseId);
-    setSelectedDatabaseId(databaseIds[currentIndex + cursor] || databaseIds[0]);
+    if (currentIndex === 0 && cursor === -1) {
+      setSelectedDatabaseId(databaseIds[databaseIds.length - 1]);
+    } else {
+      setSelectedDatabaseId(databaseIds[currentIndex + cursor] || databaseIds[0]);
+    }
   };
 
   return (
@@ -63,7 +66,7 @@ export default function Command() {
           <Action.Push title="Add database" target={<DatabaseIdForm />} />
           <Action
             title="prev"
-            onAction={() => handleSelectDatabaseId(1)}
+            onAction={() => handleSelectDatabaseId(-1)}
             shortcut={{ modifiers: ["shift"], key: "arrowUp" }}
           />
           <Action
@@ -80,7 +83,7 @@ export default function Command() {
       <Form.Dropdown
         id="databaseId"
         title="Database Name"
-        storeValue
+        defaultValue={previousSelectedDatabaseId}
         value={selectedDatabaseId}
         onChange={(value) => setSelectedDatabaseId(value)}
       >
@@ -95,7 +98,7 @@ export default function Command() {
       <Form.TextArea id="content" title="page contents" placeholder="about content" />
 
       {selectedDatabase.date && <Form.DatePicker id="date" title="date" />}
-      {selectedDatabase.check && <Form.Checkbox id="check" title="Check" label="Checkbox Label" storeValue />}
+      {selectedDatabase.check && <Form.Checkbox id="check" title="Check" label="Checkbox Label" />}
 
       {selectedDatabase.categories && (
         <Form.Dropdown id="category" title="category" defaultValue="">

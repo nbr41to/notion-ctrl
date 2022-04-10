@@ -2,7 +2,7 @@
 
 Notion のデータベースに素早くメモを保存できるようにする
 
-## 使い方
+## 使い方（Usage）
 
 ### Notion Integration Token の発行
 
